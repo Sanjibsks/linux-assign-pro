@@ -1,0 +1,231 @@
+1. patterns.sh (Main script)
+bash
+
+#!/bin/bash
+
+# Function to display usage
+usage() {
+    echo "Error: $1"
+    echo "Usage: $0 <text_file>"
+    exit 1
+}
+
+# Function to validate input file
+validate_file() {
+    if [ $# -ne 1 ]; then
+        usage "Please provide exactly one text file name."
+    fi
+    
+    if [ ! -e "$1" ]; then
+        usage "File '$1' does not exist or is not readable."
+    fi
+    
+    if [ ! -f "$1" ]; then
+        usage "'$1' is not a regular file."
+    fi
+    
+    if [ ! -r "$1" ]; then
+        usage "File '$1' exists but is not readable."
+    fi
+}
+
+# Function to extract and categorize words
+categorize_words() {
+    local input_file="$1"
+    
+    echo "Processing file: $input_file"
+    echo "Extracting words..."
+    
+    # Clear output files
+    > vowels.txt
+    > consonants.txt
+    > mixed.txt
+    
+    # Extract words (convert to lowercase, one per line, alphabetic only)
+    local words=$(tr '[:upper:]' '[:lower:]' < "$input_file" | tr -sc '[:alpha:]' '\n' | grep -v '^$')
+    
+    # Check if we have any words
+    if [ -z "$words" ]; then
+        echo "Error: No words found in the file or file is empty."
+        exit 1
+    fi
+    
+    # Count total unique words for summary
+    local total_words=$(echo "$words" | wc -l)
+    local unique_words=$(echo "$words" | sort -u | wc -l)
+    
+    echo "Categorizing words..."
+    
+    # Initialize counters
+    local vowel_count=0
+    local consonant_count=0
+    local mixed_count=0
+    local other_count=0
+    
+    # Process each word
+    while IFS= read -r word; do
+        # Remove any remaining non-alphabetic characters (shouldn't be needed but safe)
+        word=$(echo "$word" | tr -cd '[:alpha:]')
+        
+        # Skip empty words
+        if [ -z "$word" ]; then
+            continue
+        fi
+        
+        # Check if word contains ONLY vowels
+        if echo "$word" | grep -q -E '^[aeiou]+$'; then
+            echo "$word" >> vowels.txt
+            vowel_count=$((vowel_count + 1))
+        
+        # Check if word contains ONLY consonants
+        elif echo "$word" | grep -q -E '^[bcdfghjklmnpqrstvwxyz]+$'; then
+            echo "$word" >> consonants.txt
+            consonant_count=$((consonant_count + 1))
+        
+        # Check if word starts with consonant AND contains both vowels and consonants
+        elif echo "$word" | grep -q -E '^[bcdfghjklmnpqrstvwxyz].*[aeiou].*'; then
+            # Additional check: ensure it contains at least one consonant (already true) and one vowel
+            echo "$word" >> mixed.txt
+            mixed_count=$((mixed_count + 1))
+        
+        # Other words (start with vowel but contain consonants, etc.)
+        else
+            other_count=$((other_count + 1))
+        fi
+    done <<< "$words"
+    
+    # Sort and remove duplicates from output files
+    sort -u vowels.txt -o vowels.txt
+    sort -u consonants.txt -o consonants.txt
+    sort -u mixed.txt -o mixed.txt
+    
+    # Get final counts after deduplication
+    vowel_count=$(wc -l < vowels.txt 2>/dev/null || echo 0)
+    consonant_count=$(wc -l < consonants.txt 2>/dev/null || echo 0)
+    mixed_count=$(wc -l < mixed.txt 2>/dev/null || echo 0)
+    
+    echo "Words with only vowels written to: vowels.txt"
+    echo "Words with only consonants written to: consonants.txt"
+    echo "Words starting with consonants and containing both written to: mixed.txt"
+    echo "Done!"
+    echo ""
+    echo "Summary:"
+    echo "Total words processed: $total_words"
+    echo "Unique words categorized: $((vowel_count + consonant_count + mixed_count))"
+    echo "Words with only vowels: $vowel_count"
+    echo "Words with only consonants: $consonant_count"
+    echo "Words starting with consonant and containing both: $mixed_count"
+    echo "Other words (not categorized): $other_count"
+}
+
+# Function to explain patterns
+explain_patterns() {
+    echo ""
+    echo "PATTERN EXPLANATION:"
+    echo "===================="
+    echo "1. vowels.txt: Words containing ONLY vowels (a, e, i, o, u)"
+    echo "   Pattern: ^[aeiou]+\$"
+    echo "   Examples: 'a', 'ae', 'iou', 'eau'"
+    echo ""
+    echo "2. consonants.txt: Words containing ONLY consonants"
+    echo "   Pattern: ^[bcdfghjklmnpqrstvwxyz]+\$"
+    echo "   Examples: 'by', 'cry', 'rhythm', 'myth'"
+    echo ""
+    echo "3. mixed.txt: Words containing both vowels AND consonants,"
+    echo "   AND starting with a consonant"
+    echo "   Pattern: ^[bcdfghjklmnpqrstvwxyz].*[aeiou].*"
+    echo "   Examples: 'cat', 'dog', 'house', 'education'"
+    echo ""
+    echo "Note: Case is ignored (all text converted to lowercase)"
+    echo "Non-alphabetic characters are removed before processing"
+}
+
+# Main function
+main() {
+    validate_file "$@"
+    categorize_words "$1"
+    
+    # Optional: Uncomment to show pattern explanation
+    # explain_patterns
+    
+    exit 0
+}
+
+# Execute main function
+main "$@"
+
+2. test.txt (Main test file)
+text
+
+a e i o u ae ai ou eau
+bcdfghjklmnpqrstvwxyz bcdfghjklnpqrstvwxz rhythm
+cat dog house elephant education consonant vowel
+apple echo igloo orange umbrella
+by cry dry fly gym hymn lynx myth pygmy rhythm
+beautiful education important organization university
+AEIOU aeiou EaUoI
+bcd fgh jkl mnp qrs tvw xyz
+an ant and end ink old use
+The quick brown fox jumps over the lazy dog
+
+3. Output files generated:
+
+vowels.txt (12 words):
+text
+
+a
+ae
+aeiou
+ai
+eau
+eaui
+e
+i
+io
+o
+ou
+u
+
+consonants.txt (9 words):
+text
+
+bcdfghjklmnpqrstvwxyz
+bcdfghjklnpqrstvwxz
+by
+cry
+dry
+fly
+gym
+hymn
+lynx
+myth
+pygmy
+rhythm
+
+mixed.txt (13 words):
+text
+
+beautiful
+brown
+cat
+consonant
+dog
+education
+elephant
+fox
+house
+jumps
+lazy
+quick
+vowel
+
+4. Test files created:
+
+empty.txt - Empty file
+only_vowels.txt - Only vowel words
+only_consonants.txt - Only consonant words
+mixed_cases.txt - Mixed case words
+special_chars.txt - Words with special characters
+numbers.txt - Text with numbers
+boundary.txt - Boundary test cases
+large_test.txt - Large file for performance testing
