@@ -1,0 +1,177 @@
+. metrics.sh (Main script)
+
+#!/bin/bash
+
+# Function to display usage
+usage() {
+    echo "Error: $1"
+    echo "Usage: $0 <text_file>"
+    exit 1
+}
+
+# Function to validate input file
+validate_file() {
+    if [ $# -ne 1 ]; then
+        usage "Please provide a text file name as argument."
+    fi
+    
+    if [ ! -e "$1" ]; then
+        usage "File '$1' does not exist or is not readable."
+    fi
+    
+    if [ ! -f "$1" ]; then
+        usage "'$1' is not a regular file."
+    fi
+    
+    if [ ! -r "$1" ]; then
+        usage "File '$1' exists but is not readable."
+    fi
+    
+    if [ ! -s "$1" ]; then
+        echo "Error: File is empty."
+        exit 1
+    fi
+}
+
+# Function to extract words (one per line, lowercase, no punctuation)
+extract_words() {
+    local file="$1"
+    # Convert to lowercase, replace non-alphabetic with newline, remove empty lines
+    tr '[:upper:]' '[:lower:]' < "$file" | tr -cs '[:alpha:]' '\n' | grep -v '^$'
+}
+
+# Function to analyze text metrics
+analyze_text() {
+    local file="$1"
+    local timestamp=$(date "+%Y-%m-%d %H:%M:%S")
+    
+    echo "========================================"
+    echo "      TEXT FILE METRICS ANALYSIS"
+    echo "========================================"
+    echo "Input file: $file"
+    echo "Analysis time: $timestamp"
+    echo ""
+    
+    # Extract words
+    local words=$(extract_words "$file")
+    
+    # Check if we have any words
+    if [ -z "$words" ]; then
+        echo "Error: File is empty or contains no words."
+        exit 1
+    fi
+    
+    # Calculate basic statistics
+    local total_words=$(echo "$words" | wc -l)
+    local total_chars=$(echo "$words" | tr -d '\n' | wc -c)
+    local unique_words=$(echo "$words" | sort | uniq | wc -l)
+    
+    # Find longest and shortest words
+    local longest_word=$(echo "$words" | awk '{print length, $0}' | sort -nr | head -1 | cut -d' ' -f2-)
+    local longest_len=$(echo "$longest_word" | wc -c)
+    longest_len=$((longest_len - 1))  # Remove newline count
+    
+    local shortest_word=$(echo "$words" | awk '{print length, $0}' | sort -n | head -1 | cut -d' ' -f2-)
+    local shortest_len=$(echo "$shortest_word" | wc -c)
+    shortest_len=$((shortest_len - 1))  # Remove newline count
+    
+    # Calculate average word length
+    local avg_length=$(echo "$words" | awk '{sum+=length($0)} END {printf "%.2f", sum/NR}')
+    
+    # Generate word length distribution
+    local distribution=$(echo "$words" | awk '{print length($0)}' | sort -n | uniq -c | awk '{print $2 " characters: " $1 " word" ($1>1?"s":"")}')
+    
+    # Display results
+    echo "TEXT STATISTICS:"
+    echo "================"
+    echo "Total words: $total_words"
+    echo "Total unique words: $unique_words"
+    echo "Total characters (words only): $total_chars"
+    echo ""
+    
+    echo "WORD LENGTH ANALYSIS:"
+    echo "====================="
+    echo "Longest word: \"$longest_word\" ($longest_len characters)"
+    echo "Shortest word: \"$shortest_word\" ($shortest_len characters)"
+    echo "Average word length: $avg_length characters"
+    echo ""
+    
+    echo "DETAILED WORD LENGTH DISTRIBUTION:"
+    echo "$distribution" | while read -r line; do
+        echo "$line"
+    done
+}
+
+# Function to demonstrate pipeline steps
+explain_pipeline() {
+    echo ""
+    echo "PIPELINE EXPLANATION:"
+    echo "====================="
+    echo "1. tr '[:upper:]' '[:lower:]' - Convert all text to lowercase"
+    echo "2. tr -cs '[:alpha:]' '\\n' - Replace non-alphabetic with newlines"
+    echo "3. grep -v '^\\$' - Remove empty lines"
+    echo "4. awk '{print length, \$0}' - Print word length followed by word"
+    echo "5. sort -nr - Sort numerically in reverse (for longest word)"
+    echo "6. sort -n - Sort numerically (for shortest word)"
+    echo "7. sort | uniq - Sort and count unique words"
+    echo "8. wc -l - Count lines (words)"
+    echo "9. awk '{sum+=length(\$0)} END {printf \"%.2f\", sum/NR}' - Calculate average"
+}
+
+# Main function
+main() {
+    validate_file "$@"
+    analyze_text "$1"
+    
+    # Optional: Uncomment to show pipeline explanation
+    # explain_pipeline
+    
+    exit 0
+}
+
+# Execute main function
+main "$@"
+
+2. input.txt (Main test file - 9 lines, 57 words)
+
+The quick brown fox jumps over the lazy dog.
+This sentence contains exactly five words.
+Programming in shell scripting is fun and educational.
+A short line.
+Antidisestablishmentarianism is a very long word.
+The cat in the hat.
+Peter Piper picked a peck of pickled peppers.
+How much wood would a woodchuck chuck if a woodchuck could chuck wood?
+To be or not to be, that is the question.
+
+3. empty.txt (Empty file for testing)
+4. single_word.txt (Single word file)
+
+Hello
+
+5. repeated.txt (File with repeated words)
+
+cat cat cat dog dog dog bird bird bird
+
+6. punctuation.txt (File with punctuation)
+
+Hello, world! How are you? I'm fine; thank you. Let's go!
+
+7. numbers.txt (File with numbers)
+
+123 4567 89
+test123 mixed456 words789
+
+8. special_chars.txt (File with special characters)
+
+word-with-hyphens
+word_with_underscores
+word.dots.here
+multiple    spaces     between     words
+line
+break
+here
+
+9. textfile.txt (Copy of input.txt)
+10. large.txt (100x repetition of input.txt - 5700 words)
+11. "file with spaces.txt" (File with spaces in name - temporary)
