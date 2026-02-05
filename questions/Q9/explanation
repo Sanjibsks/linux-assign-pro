@@ -1,0 +1,45 @@
+Command 1: nano zombie_prevent.c
+
+Explanation: I created the main C program that demonstrates zombie process prevention. The program uses fork() to create child processes and waitpid() to clean them up, ensuring no zombies remain.
+Command 2: nano Makefile
+
+Explanation: I created a Makefile to simplify compilation. This automates the build process with targets for compilation, debugging, cleaning, and running tests.
+Command 3: make or gcc compilation
+
+Explanation: I compiled the C program using either make or direct gcc. The compilation succeeded with no warnings, creating an executable named zombie_prevent.
+Command 4: ./zombie_prevent 5
+
+Explanation: I ran the program with 5 child processes. The parent process created 5 children, each ran for a random time (1-5 seconds), and the parent waited for and reaped each child as they exited, printing their PIDs.
+Command 5: Testing with different numbers of children
+
+Explanation: I tested the program with 3 and 8 children to verify scalability. The program handled different numbers correctly, cleaning up all children regardless of count.
+Command 6: Testing with invalid arguments
+
+Explanation: I tested error handling by providing no arguments, zero, negative numbers, and non-numeric input. The program validated input and provided helpful error messages.
+Command 7: Creating zombie creator program
+
+Explanation: I created a contrasting program that intentionally creates zombies by forking children and not calling wait(). This demonstrates what happens without proper zombie prevention.
+Command 8: Compiling and running zombie creator
+
+Explanation: I ran the zombie creator and used ps aux to show the zombie processes (marked <defunct>). This visually demonstrates zombie processes that our main program prevents.
+Command 9: Monitoring processes while program runs
+
+Explanation: I used watch to monitor process states in real-time while the program ran. This showed that no processes entered the zombie (Z) state during execution.
+Command 10: Creating and running test script
+
+Explanation: I created a comprehensive test script that automates multiple test scenarios. This demonstrates thorough testing of the program's functionality and edge cases.
+Command 11: Checking process tree
+
+Explanation: I used pstree to visualize the parent-child relationships. This showed the hierarchical structure of processes and confirmed all were properly managed.
+Command 12: Testing waitpid() options
+
+Explanation: I created a program demonstrating waitpid() with WNOHANG option for non-blocking waits. This shows an alternative method for zombie prevention that allows the parent to do other work while waiting.
+Command 13: Creating program with signal handling
+
+Explanation: I created a program using SIGCHLD signal handler for zombie prevention. This demonstrates an asynchronous approach where the parent gets notified when children terminate.
+Command 14: Stress testing with 50 children
+
+Explanation: I tested the program with 50 child processes to evaluate performance and scalability. The program handled many processes efficiently, cleaning up all in under 6 seconds.
+Command 15: Checking system limits
+
+Explanation: I checked system limits for user processes and open files to understand constraints. This helps understand how many child processes the system can handle.
