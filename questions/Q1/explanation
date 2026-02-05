@@ -1,0 +1,36 @@
+Command 1: nano analyze.sh
+
+Explanation: I opened the nano text editor to create the main script file. This is the standard command-line editor in Ubuntu that allows me to write and edit shell scripts interactively.
+Command 2: chmod +x analyze.sh
+
+Explanation: I changed the file permissions to make the script executable. Without this command, the system would refuse to run the script, showing a "Permission denied" error.
+Command 3: ./analyze.sh
+
+Explanation: I tested the script with no arguments. The script correctly detected the missing argument and displayed the error message specified in the requirements.
+Command 4: ./analyze.sh arg1 arg2
+
+Explanation: I tested the script with two arguments. The script correctly rejected multiple inputs, showing it validates the argument count strictly (exactly one argument required).
+Command 5: ./analyze.sh fakefile.txt
+
+Explanation: I tested with a non-existent file path. The script used the -e test operator to check file existence before proceeding, preventing errors from invalid paths.
+Command 6: File creation commands
+
+Explanation: I created test files and directories to validate both functionality paths. The multi-line echo command created a file with multiple lines for proper line counting.
+Command 7: ./analyze.sh sample.txt
+
+Explanation: I tested file analysis functionality. The script correctly identified it as a file and used wc commands to count lines, words, and characters with input redirection.
+Command 8: ./analyze.sh testdir
+
+Explanation: I tested directory analysis. The script used find with -maxdepth 1 to only count immediate files (not recursive) and filtered .txt files using the -name pattern.
+Command 9: Symbolic link test
+
+Explanation: I tested with a symbolic link. The script followed the link and analyzed the target file, which is the expected behavior for -f test in bash.
+Command 10: ./analyze.sh /dev/null
+
+Explanation: I tested with a special device file. The script correctly rejected it since /dev/null is neither a regular file nor directory, showing proper handling of edge cases.
+Command 11: Nested directory test
+
+Explanation: I tested with a directory containing a subdirectory. The -maxdepth 1 option ensured subdirectories weren't counted as files, giving accurate file counts.
+Command 12: Manual verification commands
+
+Explanation: I manually verified the file counts using ls, grep, and find to confirm the script's output was accurate, demonstrating the underlying commands work correctly.
