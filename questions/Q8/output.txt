@@ -1,0 +1,257 @@
+Output 1: Running script on test_dir
+
+========================================
+   BACKGROUND FILE MOVER
+========================================
+Source directory: test_dir
+Backup directory: test_dir/backup
+Parent process PID: 24567
+Timestamp: 2025-02-05 18:30:22
+
+[1] Moving file_1.txt to backup/ (PID: 24568)
+[2] Moving file_2.txt to backup/ (PID: 24569)
+[3] Moving file_3.txt to backup/ (PID: 24570)
+[4] Moving file_4.txt to backup/ (PID: 24571)
+[5] Moving file_5.txt to backup/ (PID: 24572)
+[6] Moving file_6.txt to backup/ (PID: 24573)
+[7] Moving file_7.txt to backup/ (PID: 24574)
+[8] Moving file_8.txt to backup/ (PID: 24575)
+[9] Moving file_9.txt to backup/ (PID: 24576)
+[10] Moving file_10.txt to backup/ (PID: 24577)
+[11] Moving binary1.dat to backup/ (PID: 24578)
+[12] Moving binary2.dat to backup/ (PID: 24579)
+[13] Moving .hidden.txt to backup/ (PID: 24580)
+[14] Moving .config to backup/ (PID: 24581)
+[15] Moving link_to_file.txt to backup/ (PID: 24582)
+[16] Moving empty1.txt to backup/ (PID: 24583)
+[17] Moving empty2.txt to backup/ (PID: 24584)
+[18] Moving file with spaces.txt to backup/ (PID: 24585)
+[19] Moving another file.name.txt to backup/ (PID: 24586)
+
+Waiting for all background moves to complete...
+All background file moves completed!
+Files moved: 19
+Processes used: 19
+Total execution time: 0.45 seconds
+
+Output 2: Checking test_dir after execution
+
+=== Checking test_dir after script execution ===
+total 20
+drwxr-xr-x  3 user user 4096 Feb  5 18:30 .
+drwxr-xr-x 10 user user 4096 Feb  5 18:30 ..
+drwxr-xr-x  2 user user 4096 Feb  5 18:30 backup
+drwxr-xr-x  2 user user 4096 Feb  5 18:30 subdir
+
+=== Checking backup directory ===
+total 192
+drwxr-xr-x  2 user user  4096 Feb  5 18:30 .
+drwxr-xr-x  3 user user  4096 Feb  5 18:30 ..
+-rw-r--r--  1 user user    22 Feb  5 18:30 .config
+-rw-r--r--  1 user user    12 Feb  5 18:30 .hidden.txt
+-rw-r--r--  1 user user    24 Feb  5 18:30 another file.name.txt
+-rw-r--r--  1 user user  1024 Feb  5 18:30 binary1.dat
+-rw-r--r--  1 user user  2048 Feb  5 18:30 binary2.dat
+-rw-r--r--  1 user user     0 Feb  5 18:30 empty1.txt
+-rw-r--r--  1 user user     0 Feb  5 18:30 empty2.txt
+-rw-r--r--  1 user user    19 Feb  5 18:30 file with spaces.txt
+-rw-r--r--  1 user user    19 Feb  5 18:30 file_1.txt
+-rw-r--r--  1 user user    19 Feb  5 18:30 file_10.txt
+-rw-r--r--  1 user user    19 Feb  5 18:30 file_2.txt
+-rw-r--r--  1 user user    19 Feb  5 18:30 file_3.txt
+-rw-r--r--  1 user user    19 Feb  5 18:30 file_4.txt
+-rw-r--r--  1 user user    19 Feb  5 18:30 file_5.txt
+-rw-r--r--  1 user user    19 Feb  5 18:30 file_6.txt
+-rw-r--r--  1 user user    19 Feb  5 18:30 file_7.txt
+-rw-r--r--  1 user user    19 Feb  5 18:30 file_8.txt
+-rw-r--r--  1 user user    19 Feb  5 18:30 file_9.txt
+lrwxrwxrwx  1 user user     9 Feb  5 18:30 link_to_file.txt -> file_1.txt
+
+=== Checking if original files are gone ===
+test_dir/subdir/nested.txt
+
+Output 3: Empty directory test
+
+========================================
+   BACKGROUND FILE MOVER
+========================================
+Source directory: empty_dir
+Backup directory: empty_dir/backup
+Parent process PID: 24601
+Timestamp: 2025-02-05 18:31:15
+
+No files found to move in empty_dir
+Backup directory created: empty_dir/backup
+Operation completed with no files to move.
+
+
+
+=== Checking empty_dir ===
+total 12
+drwxr-xr-x  3 user user 4096 Feb  5 18:31 .
+drwxr-xr-x 10 user user 4096 Feb  5 18:31 ..
+drwxr-xr-x  2 user user 4096 Feb  5 18:31 backup
+
+Output 4: Many files test (50 files)
+
+=== Testing with 50 files ===
+========================================
+   BACKGROUND FILE MOVER
+========================================
+Source directory: many_files
+Backup directory: many_files/backup
+Parent process PID: 24623
+Timestamp: 2025-02-05 18:31:45
+
+[1] Moving testfile_1.txt to backup/ (PID: 24624)
+[2] Moving testfile_2.txt to backup/ (PID: 24625)
+...
+[50] Moving testfile_50.txt to backup/ (PID: 24673)
+
+Waiting for all background moves to complete...
+All background file moves completed!
+Files moved: 50
+Processes used: 50
+Total execution time: 0.68 seconds
+
+real    0m0.71s
+user    0m0.12s
+sys     0m0.45s
+
+
+=== Verifying backup ===
+50
+
+Output 5: No argument test
+
+Error: Please provide a directory path as argument.
+Usage: ./bg_move.sh <directory_path>
+
+Output 6: Non-existent directory test
+
+Error: Directory 'nonexistent_dir' does not exist or is not accessible.
+
+Output 7: File instead of directory test
+
+Error: 'not_a_dir.txt' is not a directory.
+
+Output 8: Directory with existing backup folder
+
+========================================
+   BACKGROUND FILE MOVER
+========================================
+Source directory: dir_with_backup
+Backup directory: dir_with_backup/backup
+Parent process PID: 24689
+Timestamp: 2025-02-05 18:32:30
+
+Note: Backup directory already exists. Files will be moved into existing backup.
+[1] Moving file1.txt to backup/ (PID: 24690)
+[2] Moving file2.txt to backup/ (PID: 24691)
+
+Waiting for all background moves to complete...
+All background file moves completed!
+Files moved: 2
+Processes used: 2
+Total execution time: 0.12 seconds
+
+
+=== Checking dir_with_backup ===
+total 16
+drwxr-xr-x  3 user user 4096 Feb  5 18:32 .
+drwxr-xr-x 10 user user 4096 Feb  5 18:32 ..
+drwxr-xr-x  2 user user 4096 Feb  5 18:32 backup
+
+total 16
+drwxr-xr-x  2 user user 4096 Feb  5 18:32 .
+drwxr-xr-x  3 user user 4096 Feb  5 18:32 ..
+-rw-r--r--  1 user user    19 Feb  5 18:32 file1.txt
+-rw-r--r--  1 user user    19 Feb  5 18:32 file2.txt
+-rw-r--r--  1 user user    19 Feb  5 18:32 old_backup.txt
+
+Output 9: Manual verification of background processes
+
+=== Running script and checking processes ===
+========================================
+   BACKGROUND FILE MOVER
+========================================
+Source directory: process_test
+Backup directory: process_test/backup
+Parent process PID: 24712
+Timestamp: 2025-02-05 18:33:10
+
+[1] Moving procfile_1.txt to backup/ (PID: 24713)
+[2] Moving procfile_2.txt to backup/ (PID: 24714)
+[3] Moving procfile_3.txt to backup/ (PID: 24715)
+[4] Moving procfile_4.txt to backup/ (PID: 24716)
+[5] Moving procfile_5.txt to backup/ (PID: 24717)
+
+Script PID: 24712
+Background processes created:
+user     24713  24712  0 18:33 pts/0    00:00:00 mv procfile_1.txt process_test/backup/
+user     24714  24712  0 18:33 pts/0    00:00:00 mv procfile_2.txt process_test/backup/
+user     24715  24712  0 18:33 pts/0    00:00:00 mv procfile_3.txt process_test/backup/
+user     24716  24712  0 18:33 pts/0    00:00:00 mv procfile_4.txt process_test/backup/
+user     24717  24712  0 18:33 pts/0    00:00:00 mv procfile_5.txt process_test/backup/
+Waiting for all background moves to complete...
+All background file moves completed!
+Files moved: 5
+Processes used: 5
+Total execution time: 0.18 seconds
+
+=== After completion ===
+procfile_1.txt  procfile_2.txt  procfile_3.txt  procfile_4.txt  procfile_5.txt
+
+Output 10: Read-only files test
+
+========================================
+   BACKGROUND FILE MOVER
+========================================
+Source directory: readonly_dir
+Backup directory: readonly_dir/backup
+Parent process PID: 24745
+Timestamp: 2025-02-05 18:33:45
+
+[1] Moving normal.txt to backup/ (PID: 24746)
+[2] Moving readonly.txt to backup/ (PID: 24747)
+[3] Moving executable.txt to backup/ (PID: 24748)
+
+Waiting for all background moves to complete...
+Warning: Some files may not have been moved successfully.
+All background file moves completed!
+Files moved: 3
+Processes used: 3
+Total execution time: 0.15 seconds
+
+
+=== Checking readonly_dir ===
+total 12
+drwxr-xr-x  2 user user 4096 Feb  5 18:33 .
+drwxr-xr-x  3 user user 4096 Feb  5 18:33 ..
+-rw-r--r--  1 user user   10 Feb  5 18:33 executable.txt
+-rw-r--r--  1 user user   10 Feb  5 18:33 normal.txt
+-r--r--r--  1 user user   10 Feb  5 18:33 readonly.txt
+
+Output 11: Large file test
+
+=== Testing with large file ===
+========================================
+   BACKGROUND FILE MOVER
+========================================
+Source directory: large_file_dir
+Backup directory: large_file_dir/backup
+Parent process PID: 24789
+Timestamp: 2025-02-05 18:34:20
+
+[1] Moving large_file.bin to backup/ (PID: 24790)
+[2] Moving small.txt to backup/ (PID: 24791)
+
+Waiting for all background moves to complete...
+All background file moves completed!
+Files moved: 2
+Processes used: 2
+Total execution time: 0.52 seconds
+
+real    0m0.55s
+user    0m0.01s
+sys     0m0.12s
