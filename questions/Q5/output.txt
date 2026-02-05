@@ -1,0 +1,321 @@
+Output 1: Running sync script on test directories
+
+========================================
+   DIRECTORY COMPARISON ANALYSIS
+========================================
+Directory A: dirA
+Directory B: dirB
+Analysis started at: 2025-02-05 16:30:22
+
+VALIDATING DIRECTORIES...
+✓ Both directories exist and are accessible
+
+SCANNING DIRECTORIES...
+Found 6 files in dirA
+Found 6 files in dirB
+
+ANALYSIS RESULTS:
+================
+
+1. FILES PRESENT ONLY IN DIRA:
+   ---------------------------
+   unique_a.txt
+
+2. FILES PRESENT ONLY IN DIRB:
+   ---------------------------
+   another.txt
+   unique_b.txt
+
+3. COMMON FILES (EXIST IN BOTH DIRECTORIES):
+   -----------------------------------------
+   Comparing 4 common files...
+
+   data.bin: ✓ CONTENT MATCH (Files are identical)
+   file1.txt: ✗ EXISTS ONLY IN DIRA (No corresponding file in dirB)
+   file2.txt: ✗ CONTENT DIFFER (Files have different content)
+   file3.txt: ✓ CONTENT MATCH (Files are identical)
+   random.bin: ✗ CONTENT DIFFER (Files have different content)
+   subdir/nested.txt: ✗ CONTENT DIFFER (Files have different content)
+
+SUMMARY:
+========
+Total files analyzed: 12
+Files unique to dirA: 1
+Files unique to dirB: 2
+Common files: 4
+Files with matching content: 2
+Files with different content: 2
+Files only in one directory: 3
+
+Output 2: Testing with empty directories
+========================================
+   DIRECTORY COMPARISON ANALYSIS
+========================================
+Directory A: empty_dir1
+Directory B: empty_dir2
+Analysis started at: 2025-02-05 16:31:15
+
+VALIDATING DIRECTORIES...
+✓ Both directories exist and are accessible
+
+SCANNING DIRECTORIES...
+Found 0 files in dirA
+Found 0 files in dirB
+
+ANALYSIS RESULTS:
+================
+
+1. FILES PRESENT ONLY IN DIRA:
+   ---------------------------
+   No unique files found
+
+2. FILES PRESENT ONLY IN DIRB:
+   ---------------------------
+   No unique files found
+
+3. COMMON FILES (EXIST IN BOTH DIRECTORIES):
+   -----------------------------------------
+   No common files found
+
+SUMMARY:
+========
+Total files analyzed: 0
+Files unique to dirA: 0
+Files unique to dirB: 0
+Common files: 0
+Files with matching content: 0
+Files with different content: 0
+Files only in one directory: 0
+
+Output 3: Testing with one empty directory
+
+========================================
+   DIRECTORY COMPARISON ANALYSIS
+========================================
+Directory A: dirA
+Directory B: empty_dir1
+Analysis started at: 2025-02-05 16:31:45
+
+VALIDATING DIRECTORIES...
+✓ Both directories exist and are accessible
+
+SCANNING DIRECTORIES...
+Found 6 files in dirA
+Found 0 files in dirB
+
+ANALYSIS RESULTS:
+================
+
+1. FILES PRESENT ONLY IN DIRA:
+   ---------------------------
+   data.bin
+   file1.txt
+   file2.txt
+   file3.txt
+   random.bin
+   subdir/nested.txt
+   unique_a.txt
+
+2. FILES PRESENT ONLY IN DIRB:
+   ---------------------------
+   No unique files found
+
+3. COMMON FILES (EXIST IN BOTH DIRECTORIES):
+   -----------------------------------------
+   No common files found
+
+SUMMARY:
+========
+Total files analyzed: 6
+Files unique to dirA: 6
+Files unique to dirB: 0
+Common files: 0
+Files with matching content: 0
+Files with different content: 0
+Files only in one directory: 6
+
+Output 4: Testing with non-existent directory
+
+Error: Directory 'nonexistent' does not exist or is not accessible.
+Usage: ./sync.sh <directory_A> <directory_B>
+
+Output 5: Testing with insufficient arguments
+
+Error: Please provide exactly two directory paths.
+Usage: ./sync.sh <directory_A> <directory_B>
+
+Output 6: Testing with too many arguments
+
+Error: Please provide exactly two directory paths.
+Usage: ./sync.sh <directory_A> <directory_B>
+
+Output 7: Testing with symbolic links
+
+========================================
+   DIRECTORY COMPARISON ANALYSIS
+========================================
+Directory A: dirA
+Directory B: dirB
+Analysis started at: 2025-02-05 16:32:30
+
+VALIDATING DIRECTORIES...
+✓ Both directories exist and are accessible
+
+SCANNING DIRECTORIES...
+Found 7 files in dirA
+Found 7 files in dirB
+
+ANALYSIS RESULTS:
+================
+
+1. FILES PRESENT ONLY IN DIRA:
+   ---------------------------
+   link.txt (symbolic link)
+
+2. FILES PRESENT ONLY IN DIRB:
+   ---------------------------
+   another.txt
+   unique_b.txt
+
+3. COMMON FILES (EXIST IN BOTH DIRECTORIES):
+   -----------------------------------------
+   Comparing 4 common files...
+
+   data.bin: ✓ CONTENT MATCH (Files are identical)
+   file1.txt: ✗ EXISTS ONLY IN DIRA (No corresponding file in dirB)
+   file2.txt: ✗ CONTENT DIFFER (Files have different content)
+   file3.txt: ✓ CONTENT MATCH (Files are identical)
+   random.bin: ✗ CONTENT DIFFER (Files have different content)
+   subdir/nested.txt: ✗ CONTENT DIFFER (Files have different content)
+
+SUMMARY:
+========
+Total files analyzed: 14
+Files unique to dirA: 1
+Files unique to dirB: 2
+Common files: 4
+Files with matching content: 2
+Files with different content: 2
+Files only in one directory: 3
+
+Output 8: Testing with identical directories
+
+========================================
+   DIRECTORY COMPARISON ANALYSIS
+========================================
+Directory A: dirA
+Directory B: dirA_copy
+Analysis started at: 2025-02-05 16:33:10
+
+VALIDATING DIRECTORIES...
+✓ Both directories exist and are accessible
+
+SCANNING DIRECTORIES...
+Found 7 files in dirA
+Found 7 files in dirB
+
+ANALYSIS RESULTS:
+================
+
+1. FILES PRESENT ONLY IN DIRA:
+   ---------------------------
+   No unique files found
+
+2. FILES PRESENT ONLY IN DIRB:
+   ---------------------------
+   No unique files found
+
+3. COMMON FILES (EXIST IN BOTH DIRECTORIES):
+   -----------------------------------------
+   Comparing 7 common files...
+
+   data.bin: ✓ CONTENT MATCH (Files are identical)
+   file1.txt: ✓ CONTENT MATCH (Files are identical)
+   file2.txt: ✓ CONTENT MATCH (Files are identical)
+   file3.txt: ✓ CONTENT MATCH (Files are identical)
+   link.txt: ⚠ SYMBOLIC LINK (Not compared)
+   random.bin: ✓ CONTENT MATCH (Files are identical)
+   subdir/nested.txt: ✓ CONTENT MATCH (Files are identical)
+   unique_a.txt: ✓ CONTENT MATCH (Files are identical)
+
+SUMMARY:
+========
+Total files analyzed: 14
+Files unique to dirA: 0
+Files unique to dirB: 0
+Common files: 7
+Files with matching content: 6
+Files with different content: 0
+Files only in one directory: 0
+
+Output 9: Manual verification
+
+=== Manual verification ===
+Files only in dirA:
+link.txt
+unique_a.txt
+
+Files only in dirB:
+another.txt
+unique_b.txt
+
+Common files:
+data.bin
+file1.txt
+file2.txt
+file3.txt
+random.bin
+subdir/nested.txt
+
+Output 10: Testing with hidden files
+text
+
+========================================
+   DIRECTORY COMPARISON ANALYSIS
+========================================
+Directory A: dirA
+Directory B: dirB
+Analysis started at: 2025-02-05 16:33:45
+
+VALIDATING DIRECTORIES...
+✓ Both directories exist and are accessible
+
+SCANNING DIRECTORIES...
+Found 8 files in dirA (including 1 hidden)
+Found 8 files in dirB (including 1 hidden)
+
+ANALYSIS RESULTS:
+================
+
+1. FILES PRESENT ONLY IN DIRA:
+   ---------------------------
+   .hidden.txt
+   link.txt
+   unique_a.txt
+
+2. FILES PRESENT ONLY IN DIRB:
+   ---------------------------
+   .hidden.txt
+   another.txt
+   unique_b.txt
+
+3. COMMON FILES (EXIST IN BOTH DIRECTORIES):
+   -----------------------------------------
+   Comparing 4 common files...
+
+   data.bin: ✓ CONTENT MATCH (Files are identical)
+   file1.txt: ✗ EXISTS ONLY IN DIRA (No corresponding file in dirB)
+   file2.txt: ✗ CONTENT DIFFER (Files have different content)
+   file3.txt: ✓ CONTENT MATCH (Files are identical)
+   random.bin: ✗ CONTENT DIFFER (Files have different content)
+   subdir/nested.txt: ✗ CONTENT DIFFER (Files have different content)
+
+SUMMARY:
+========
+Total files analyzed: 16
+Files unique to dirA: 3
+Files unique to dirB: 3
+Common files: 4
+Files with matching content: 2
+Files with different content: 2
+Files only in one directory: 6
