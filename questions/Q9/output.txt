@@ -1,0 +1,160 @@
+Output 1: Compilation output
+
+gcc -Wall -Wextra -o zombie_prevent zombie_prevent.c
+
+Output 2: Running with 5 child processes
+
+[PARENT] PID: 4872 - Starting zombie prevention demo
+[PARENT] Creating 5 child processes...
+
+[CHILD 1] PID: 4873 - Started, will run for 3 seconds
+[CHILD 2] PID: 4874 - Started, will run for 1 seconds
+[CHILD 3] PID: 4875 - Started, will run for 4 seconds
+[CHILD 4] PID: 4876 - Started, will run for 2 seconds
+[CHILD 5] PID: 4877 - Started, will run for 1 seconds
+
+[CHILD 2] PID: 4874 - Exiting after 1 seconds
+[PARENT] Reaped child PID: 4874 with exit status: 0
+
+[CHILD 5] PID: 4877 - Exiting after 1 seconds
+[PARENT] Reaped child PID: 4877 with exit status: 0
+
+[CHILD 4] PID: 4876 - Exiting after 2 seconds
+[PARENT] Reaped child PID: 4876 with exit status: 0
+
+[CHILD 1] PID: 4873 - Exiting after 3 seconds
+[PARENT] Reaped child PID: 4873 with exit status: 0
+
+[CHILD 3] PID: 4875 - Exiting after 4 seconds
+[PARENT] Reaped child PID: 4875 with exit status: 0
+
+[PARENT] All child processes have been cleaned up
+[PARENT] No zombie processes remain
+[PARENT] Total execution time: 4.02 seconds
+
+Output 3: Running with 3 child processes
+
+[PARENT] PID: 4923 - Starting zombie prevention demo
+[PARENT] Creating 3 child processes...
+
+[CHILD 1] PID: 4924 - Started, will run for 4 seconds
+[CHILD 2] PID: 4925 - Started, will run for 1 seconds
+[CHILD 3] PID: 4926 - Started, will run for 2 seconds
+
+[CHILD 2] PID: 4925 - Exiting after 1 seconds
+[PARENT] Reaped child PID: 4925 with exit status: 0
+
+[CHILD 3] PID: 4926 - Exiting after 2 seconds
+[PARENT] Reaped child PID: 4926 with exit status: 0
+
+[CHILD 1] PID: 4924 - Exiting after 4 seconds
+[PARENT] Reaped child PID: 4924 with exit status: 0
+
+[PARENT] All child processes have been cleaned up
+[PARENT] No zombie processes remain
+[PARENT] Total execution time: 4.01 seconds
+
+Output 4: Invalid arguments
+
+Error: Please provide the number of child processes to create
+Usage: ./zombie_prevent <num_children>
+
+
+Error: Number of child processes must be positive (greater than 0)
+
+
+Error: Invalid argument. Please provide a positive integer.
+
+Output 5: Zombie creator program (creating zombies)
+
+[PARENT] Creating 3 zombie children...
+[CHILD 1] PID: 5123 - Started (will become zombie)
+[CHILD 2] PID: 5124 - Started (will become zombie)
+[CHILD 3] PID: 5125 - Started (will become zombie)
+[PARENT] Not waiting for children. They will become zombies...
+[PARENT] Sleeping for 60 seconds. Check with: ps aux | grep defunct
+
+
+user      5123  5122  0 19:30 pts/0    00:00:00 [zombie_create] <defunct>
+user      5124  5122  0 19:30 pts/0    00:00:00 [zombie_create] <defunct>
+user      5125  5122  0 19:30 pts/0    00:00:00 [zombie_create] <defunct>
+
+Output 6: Process monitoring during execution
+
+Every 0.5s: ps -eo pid,ppid,state,cmd | grep -E "(zombie_prevent|defunct)" | grep -v grep
+
+4872  4865 S+   ./zombie_prevent 5
+4873  4872 S+   ./zombie_prevent 5
+4874  4872 S+   ./zombie_prevent 5
+4875  4872 S+   ./zombie_prevent 5
+4876  4872 S+   ./zombie_prevent 5
+4877  4872 S+   ./zombie_prevent 5
+
+(After children start exiting, no defunct/Z state appears)
+
+Output 7: Process tree output
+
+zombie_prevent(4872)─┬─zombie_prevent(4873)
+                     ├─zombie_prevent(4874)
+                     ├─zombie_prevent(4875)
+                     ├─zombie_prevent(4876)
+                     └─zombie_prevent(4877)
+
+Output 8: waitpid() demo
+
+[PARENT] Using waitpid() with WNOHANG option
+[PARENT] Creating 4 child processes...
+[CHILD 1] PID: 5321 - Running for 2 seconds
+[CHILD 2] PID: 5322 - Running for 4 seconds
+[CHILD 3] PID: 5323 - Running for 1 seconds
+[CHILD 4] PID: 5324 - Running for 3 seconds
+
+[PARENT] Polling for completed children (non-blocking)...
+[PARENT] Poll: No children have exited yet
+[CHILD 3] PID: 5323 - Exiting
+[PARENT] Poll: Reaped child PID: 5323
+[CHILD 1] PID: 5321 - Exiting
+[PARENT] Poll: Reaped child PID: 5321
+[CHILD 4] PID: 5324 - Exiting
+[PARENT] Poll: Reaped child PID: 5324
+[CHILD 2] PID: 5322 - Exiting
+[PARENT] Poll: Reaped child PID: 5322
+
+[PARENT] All children reaped using waitpid() with WNOHANG
+
+Output 9: Signal handler version
+
+[PARENT] Using SIGCHLD handler for zombie prevention
+[PARENT] Creating 3 child processes...
+[CHILD 1] PID: 5412 - Running for 3 seconds
+[CHILD 2] PID: 5413 - Running for 1 seconds
+[CHILD 3] PID: 5414 - Running for 2 seconds
+
+[SIGCHLD HANDLER] Received signal for child termination
+[SIGCHLD HANDLER] Reaped child PID: 5413
+
+[SIGCHLD HANDLER] Received signal for child termination
+[SIGCHLD HANDLER] Reaped child PID: 5414
+
+[SIGCHLD HANDLER] Received signal for child termination
+[SIGCHLD HANDLER] Reaped child PID: 5412
+
+[PARENT] All children have terminated
+
+Output 10: Stress test with 50 children
+
+[PARENT] PID: 5521 - Starting zombie prevention demo
+[PARENT] Creating 50 child processes...
+... (many child processes starting)
+[PARENT] All child processes have been cleaned up
+[PARENT] No zombie processes remain
+[PARENT] Total execution time: 5.87 seconds
+
+real    0m5.89s
+user    0m0.12s
+sys     0m0.45s
+
+Output 11: System limits
+
+1024
+1024
