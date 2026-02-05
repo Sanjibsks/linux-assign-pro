@@ -1,0 +1,55 @@
+Output 1: No arguments
+
+Error: Please provide exactly one argument.
+Usage: ./analyze.sh <file_or_directory>
+
+Output 2: Too many arguments
+
+Error: Please provide exactly one argument.
+Usage: ./analyze.sh <file_or_directory>
+
+Output 3: Non-existent path
+
+Error: The path 'fakefile.txt' does not exist.
+
+Output 4: File analysis
+
+Analyzing file: sample.txt
+Lines: 3
+Words: 6
+Characters: 24
+
+Output 5: Directory analysis
+
+Analyzing directory: testdir
+Total files: 4
+Text files (.txt): 2
+
+Output 6: Symbolic link
+
+Analyzing file: link.txt
+Lines: 3
+Words: 6
+Characters: 24
+
+Output 7: Special file
+
+Error: '/dev/null' is neither a regular file nor a directory.
+
+Output 8: Nested directory
+
+Analyzing directory: testdir2
+Total files: 2
+Text files (.txt): 1
+
+Output 9: Manual verification
+
+total 24
+drwxr-xr-x 2 user user 4096 Feb  5 14:30 .
+drwxr-xr-x 7 user user 4096 Feb  5 14:30 ..
+-rw-r--r-- 1 user user   15 Feb  5 14:30 data.csv
+-rw-r--r-- 1 user user   24 Feb  5 14:30 sample.txt
+-rw-r--r-- 1 user user   12 Feb  5 14:30 test.txt
+-rw-r--r-- 1 user user    0 Feb  5 14:30 image.jpg
+4
+2
