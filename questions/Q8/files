@@ -1,0 +1,240 @@
+1. bg_move.sh (Main script)
+bash
+
+#!/bin/bash
+
+# Function to display usage
+usage() {
+    echo "Error: $1"
+    echo "Usage: $0 <directory_path>"
+    exit 1
+}
+
+# Function to validate directory
+validate_directory() {
+    if [ $# -ne 1 ]; then
+        usage "Please provide a directory path as argument."
+    fi
+    
+    if [ ! -e "$1" ]; then
+        usage "Directory '$1' does not exist or is not accessible."
+    fi
+    
+    if [ ! -d "$1" ]; then
+        usage "'$1' is not a directory."
+    fi
+    
+    if [ ! -r "$1" ] || [ ! -w "$1" ] || [ ! -x "$1" ]; then
+        usage "Directory '$1' does not have proper permissions (read/write/execute)."
+    fi
+}
+
+# Function to move files in background
+move_files_background() {
+    local source_dir="$1"
+    local backup_dir="$2"
+    local timestamp=$(date "+%Y-%m-%d %H:%M:%S")
+    local parent_pid=$$
+    
+    echo "========================================"
+    echo "   BACKGROUND FILE MOVER"
+    echo "========================================"
+    echo "Source directory: $source_dir"
+    echo "Backup directory: $backup_dir"
+    echo "Parent process PID: $parent_pid"
+    echo "Timestamp: $timestamp"
+    echo ""
+    
+    # Create backup directory if it doesn't exist
+    if [ ! -d "$backup_dir" ]; then
+        mkdir -p "$backup_dir"
+        echo "Created backup directory: $backup_dir"
+    else
+        echo "Note: Backup directory already exists. Files will be moved into existing backup."
+    fi
+    echo ""
+    
+    # Get list of files (excluding directories and backup directory itself)
+    # Using find to get files only, not directories
+    local files=()
+    while IFS= read -r -d $'\0' file; do
+        # Get just the filename
+        local filename=$(basename "$file")
+        # Skip if it's the backup directory
+        if [[ "$file" != "$backup_dir"* ]] && [[ "$file" != "$source_dir/backup" ]]; then
+            files+=("$filename")
+        fi
+    done < <(find "$source_dir" -maxdepth 1 -type f -print0)
+    
+    # Also get hidden files
+    while IFS= read -r -d $'\0' file; do
+        local filename=$(basename "$file")
+        if [[ "$file" != "$backup_dir"* ]] && [[ "$file" != "$source_dir/backup" ]]; then
+            files+=("$filename")
+        fi
+    done < <(find "$source_dir" -maxdepth 1 -type f -name ".*" -print0)
+    
+    # Check if there are files to move
+    if [ ${#files[@]} -eq 0 ]; then
+        echo "No files found to move in $source_dir"
+        echo "Backup directory created: $backup_dir"
+        echo "Operation completed with no files to move."
+        exit 0
+    fi
+    
+    # Arrays to store PIDs
+    local pids=()
+    local moved_files=0
+    local process_count=0
+    
+    # Start time
+    local start_time=$(date +%s.%N)
+    
+    # Move each file in background
+    for ((i=0; i<${#files[@]}; i++)); do
+        local filename="${files[$i]}"
+        local filepath="$source_dir/$filename"
+        local destpath="$backup_dir/$filename"
+        
+        # Check if file still exists (might have been moved by another process in edge cases)
+        if [ -f "$filepath" ] || [ -L "$filepath" ]; then
+            # Move file in background
+            mv "$filepath" "$destpath" &
+            
+            # Get PID of the background process
+            local pid=$!
+            pids+=($pid)
+            process_count=$((process_count + 1))
+            
+            # Display process information
+            echo "[$((i+1))] Moving $filename to backup/ (PID: $pid)"
+            
+            # Increment moved files counter
+            moved_files=$((moved_files + 1))
+        else
+            echo "[$((i+1))] Skipping $filename (file no longer exists)"
+        fi
+        
+        # Small delay to avoid overwhelming the system
+        sleep 0.01
+    done
+    
+    echo ""
+    echo "Waiting for all background moves to complete..."
+    
+    # Wait for all background processes to finish
+    local failed_moves=0
+    for pid in "${pids[@]}"; do
+        if wait $pid 2>/dev/null; then
+            : # Success, do nothing
+        else
+            failed_moves=$((failed_moves + 1))
+        fi
+    done
+    
+    # End time
+    local end_time=$(date +%s.%N)
+    local execution_time=$(echo "$end_time - $start_time" | bc)
+    
+    echo ""
+    
+    # Display completion message
+    if [ $failed_moves -gt 0 ]; then
+        echo "Warning: Some files may not have been moved successfully."
+    fi
+    
+    echo "All background file moves completed!"
+    echo "Files moved: $moved_files"
+    echo "Processes used: $process_count"
+    printf "Total execution time: %.2f seconds\n" "$execution_time"
+    
+    # Verify final state
+    local remaining_files=$(find "$source_dir" -maxdepth 1 -type f | grep -v "^$backup_dir$" | wc -l)
+    if [ $remaining_files -gt 0 ]; then
+        echo "Note: $remaining_files files remain in source directory (may be newly created during move)."
+    fi
+}
+
+# Main function
+main() {
+    validate_directory "$@"
+    
+    local source_dir="$1"
+    local backup_dir="$source_dir/backup"
+    
+    # Check if we have write permission in the directory
+    if [ ! -w "$source_dir" ]; then
+        echo "Error: No write permission in directory '$source_dir'"
+        exit 1
+    fi
+    
+    # Check if backup directory is writable or can be created
+    if [ -d "$backup_dir" ] && [ ! -w "$backup_dir" ]; then
+        echo "Error: Backup directory exists but is not writable."
+        exit 1
+    fi
+    
+    # Move files in background
+    move_files_background "$source_dir" "$backup_dir"
+    
+    exit 0
+}
+
+# Execute main function
+main "$@"
+
+2. Directory Structure Created
+
+test_dir/ (Initial state - 19 files + 1 subdirectory)
+
+    file_1.txt to file_10.txt
+
+    binary1.dat, binary2.dat
+
+    .hidden.txt, .config
+
+    link_to_file.txt (symlink)
+
+    empty1.txt, empty2.txt
+
+    "file with spaces.txt"
+
+    "another file.name.txt"
+
+    subdir/nested.txt
+
+test_dir/backup/ (After script execution)
+
+    All 19 files from above moved here
+
+many_files/ (50 text files for performance testing)
+
+    testfile_1.txt to testfile_50.txt
+
+empty_dir/ (Empty directory)
+
+existing_backup/ (Directory with pre-existing backup)
+
+dir_with_backup/ (Directory with existing backup folder)
+
+    file1.txt, file2.txt
+
+    backup/old_backup.txt
+
+process_test/ (For process monitoring)
+
+    procfile_1.txt to procfile_5.txt
+
+readonly_dir/ (Files with different permissions)
+
+    normal.txt (644)
+
+    readonly.txt (444)
+
+    executable.txt (755)
+
+large_file_dir/ (For large file testing)
+
+    large_file.bin (10MB)
+
+    small.txt
