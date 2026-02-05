@@ -1,0 +1,122 @@
+Output 1: No argument provided
+
+Error: Please provide a log file name as argument.
+Usage: ./log_analyzer.sh <logfile>
+
+Output 2: Non-existent file
+
+Error: File 'nonexistent.log' does not exist or is not readable.
+
+Output 3: Unreadable file
+
+Error: File 'unreadable.log' exists but is not readable.
+
+Output 4: Valid log file analysis
+
+========================================
+       LOG FILE ANALYSIS REPORT
+========================================
+File analyzed: sample.log
+Analysis date: 2025-02-05
+Analysis time: 14:30:22
+
+SUMMARY STATISTICS:
+===================
+Total log entries: 10
+INFO messages: 4
+WARNING messages: 2
+ERROR messages: 4
+
+ERROR ANALYSIS:
+===============
+Most recent ERROR message:
+2025-01-12 10:22:30 ERROR Database connection failed
+
+Report saved to: logsummary_2025-02-05.txt
+
+Output 5: Empty log file
+
+========================================
+       LOG FILE ANALYSIS REPORT
+========================================
+File analyzed: empty.log
+Analysis date: 2025-02-05
+Analysis time: 14:31:15
+
+SUMMARY STATISTICS:
+===================
+Total log entries: 0
+INFO messages: 0
+WARNING messages: 0
+ERROR messages: 0
+
+ERROR ANALYSIS:
+===============
+Most recent ERROR message: N/A (No ERROR messages found)
+
+Report saved to: logsummary_2025-02-05.txt
+
+Output 6: Malformed log file
+
+========================================
+       LOG FILE ANALYSIS REPORT
+========================================
+File analyzed: malformed.log
+Analysis date: 2025-02-05
+Analysis time: 14:32:05
+
+SUMMARY STATISTICS:
+===================
+Total log entries: 4
+INFO messages: 1
+WARNING messages: 1
+ERROR messages: 1
+
+ERROR ANALYSIS:
+===============
+Most recent ERROR message:
+2025-01-12 10:16:01 ERROR Disk not found
+
+Report saved to: logsummary_2025-02-05.txt
+
+Output 7: Log file with no errors
+
+========================================
+       LOG FILE ANALYSIS REPORT
+========================================
+File analyzed: no_errors.log
+Analysis date: 2025-02-05
+Analysis time: 14:33:20
+
+SUMMARY STATISTICS:
+===================
+Total log entries: 3
+INFO messages: 2
+WARNING messages: 1
+ERROR messages: 0
+
+ERROR ANALYSIS:
+===============
+Most recent ERROR message: N/A (No ERROR messages found)
+
+Report saved to: logsummary_2025-02-05.txt
+
+Output 8: Manual verification commands
+
+10 sample.log
+4
+2
+4
+
+Output 9: Report file listing
+
+-rw-r--r-- 1 user user 550 Feb  5 14:30 logsummary_2025-02-05.txt
+-rw-r--r-- 1 user user 550 Feb  5 14:31 logsummary_2025-02-05.txt
+-rw-r--r-- 1 user user 550 Feb  5 14:32 logsummary_2025-02-05.txt
+-rw-r--r-- 1 user user 550 Feb  5 14:33 logsummary_2025-02-05.txt
+
+Output 10: Multiple files error
+
+Error: Please provide exactly one log file name.
+Usage: ./log_analyzer.sh <logfile>
+
