@@ -1,0 +1,172 @@
+Output 1: Compilation output
+
+gcc -Wall -Wextra -o signal_demo signal_demo.c
+
+Output 2: Running signal_demo program
+
+========================================
+        SIGNAL HANDLING DEMO
+========================================
+[PARENT] PID: 6789 - Starting signal handling demonstration
+[PARENT] Setting up signal handlers...
+[PARENT] SIGTERM handler installed
+[PARENT] SIGINT handler installed
+
+[PARENT] Creating child processes...
+[CHILD 1] PID: 6790 - Will send SIGTERM after 5 seconds
+[CHILD 2] PID: 6791 - Will send SIGINT after 10 seconds
+
+[PARENT] Main process running. Waiting for signals...
+[PARENT] Time: 0 seconds
+[PARENT] Time: 1 seconds
+[PARENT] Time: 2 seconds
+[PARENT] Time: 3 seconds
+[PARENT] Time: 4 seconds
+
+[CHILD 1] PID: 6790 - Sending SIGTERM to parent PID: 6789
+╔════════════════════════════════════════╗
+║        SIGNAL HANDLER ACTIVATED        ║
+╠════════════════════════════════════════╣
+║ Signal: SIGTERM (15)                   ║
+║ Time received: 5.01 seconds            ║
+║ Handler: Graceful shutdown initiated   ║
+╚════════════════════════════════════════╝
+
+[PARENT] Cleaning up child processes...
+[PARENT] Waiting for child 2 to complete...
+[PARENT] Time: 5 seconds
+[PARENT] Time: 6 seconds
+[PARENT] Time: 7 seconds
+[PARENT] Time: 8 seconds
+[PARENT] Time: 9 seconds
+
+[CHILD 2] PID: 6791 - Sending SIGINT to parent PID: 6789
+╔════════════════════════════════════════╗
+║        SIGNAL HANDLER ACTIVATED        ║
+╠════════════════════════════════════════╣
+║ Signal: SIGINT (2)                     ║
+║ Time received: 10.02 seconds           ║
+║ Handler: Interrupt received            ║
+╚════════════════════════════════════════╝
+
+[PARENT] SIGINT received but already shutting down (SIGTERM handled first)
+[PARENT] Child 2 completed
+
+[PARENT] All child processes cleaned up
+[PARENT] Performing final cleanup...
+[PARENT] Signal handling demonstration completed
+[PARENT] Exit code: 0
+========================================
+
+Output 3: Testing in background
+
+Main program PID: 6815
+  PID  PPID CMD
+ 6815  4865 ./signal_demo
+ 6816  6815 ./signal_demo
+ 6817  6815 ./signal_demo
+
+Output 4: Manual signal testing
+
+Program PID: 6830
+Sending SIGTERM to PID 6830
+╔════════════════════════════════════════╗
+║        SIGNAL HANDLER ACTIVATED        ║
+╠════════════════════════════════════════╣
+║ Signal: SIGTERM (15)                   ║
+║ Time received: 2.15 seconds            ║
+║ Handler: Graceful shutdown initiated   ║
+╚════════════════════════════════════════╝
+[PARENT] Cleaning up child processes...
+Program terminated
+
+Output 5: Advanced signal demo
+
+[ADVANCED] Setting up multiple signal handlers...
+[ADVANCED] Installed handlers for: SIGTERM, SIGINT, SIGUSR1, SIGUSR2
+[ADVANCED] Creating child to send multiple signals...
+[CHILD] Will send SIGUSR1 at 3s, SIGUSR2 at 6s, SIGTERM at 9s
+[ADVANCED] Waiting for signals...
+
+╔════════════════════════════════════════╗
+║        SIGNAL HANDLER ACTIVATED        ║
+╠════════════════════════════════════════╣
+║ Signal: SIGUSR1 (10)                   ║
+║ Custom user signal 1 received          ║
+╚════════════════════════════════════════╝
+
+╔════════════════════════════════════════╗
+║        SIGNAL HANDLER ACTIVATED        ║
+╠════════════════════════════════════════╣
+║ Signal: SIGUSR2 (12)                   ║
+║ Custom user signal 2 received          ║
+╚════════════════════════════════════════╝
+
+╔════════════════════════════════════════╗
+║        SIGNAL HANDLER ACTIVATED        ║
+╠════════════════════════════════════════╣
+║ Signal: SIGTERM (15)                   ║
+║ Handler: Graceful shutdown initiated   ║
+╚════════════════════════════════════════╝
+
+Output 6: Signal blocking test
+
+[SIGNAL BLOCK] Blocking SIGINT for 5 seconds...
+[SIGNAL BLOCK] SIGINT is now blocked
+[SIGNAL BLOCK] Try sending SIGINT (Ctrl+C) - it will be queued
+^C^C^C  (Pressed Ctrl+C 3 times)
+[SIGNAL BLOCK] Unblocking SIGINT...
+[SIGNAL BLOCK] Queued SIGINT signals delivered!
+[INTERRUPT] Signal received after blocking period
+
+Output 7: Strace output
+
+[pid  7012] kill(7011, SIGTERM)        = 0
+[pid  7011] --- SIGTERM {si_signo=SIGTERM, si_code=SI_USER, si_pid=7012, si_uid=1000} ---
+[pid  7013] kill(7011, SIGINT)         = 0
+[pid  7011] --- SIGINT {si_signo=SIGINT, si_code=SI_USER, si_pid=7013, si_uid=1000} ---
+
+Output 8: Error handling demo
+
+[SIGNAL ERROR] Testing invalid signal handling...
+[SIGNAL ERROR] Attempting to install handler for invalid signal 99...
+Error: sigaction failed: Invalid argument
+[SIGNAL ERROR] Testing signal to non-existent process...
+Error: kill failed: No such process
+
+Output 9: Concurrent signals test
+
+[CONCURRENT] Testing rapid signal delivery...
+[CONCURRENT] Child will send 5 rapid SIGUSR1 signals
+[CONCURRENT] Signal 1 received
+[CONCURRENT] Signal 2 received
+[CONCURRENT] Signal 3 received
+[CONCURRENT] Signal 4 received
+[CONCURRENT] Signal 5 received
+[CONCURRENT] All signals handled
+
+Output 10: Signal dispositions
+
+ 1) SIGHUP       2) SIGINT       3) SIGQUIT      4) SIGILL       5) SIGTRAP
+ 6) SIGABRT      7) SIGBUS       8) SIGFPE       9) SIGKILL     10) SIGUSR1
+11) SIGSEGV     12) SIGUSR2     13) SIGPIPE     14) SIGALRM     15) SIGTERM
+16) SIGSTKFLT   17) SIGCHLD     18) SIGCONT     19) SIGSTOP     20) SIGTSTP
+21) SIGTTIN     22) SIGTTOU     23) SIGURG      24) SIGXCPU     25) SIGXFSZ
+26) SIGVTALRM   27) SIGPROF     28) SIGWINCH    29) SIGIO       30) SIGPWR
+31) SIGSYS      34) SIGRTMIN    35) SIGRTMIN+1  36) SIGRTMIN+2  37) SIGRTMIN+3
+38) SIGRTMIN+4  39) SIGRTMIN+5  40) SIGRTMIN+6  41) SIGRTMIN+7  42) SIGRTMIN+8
+43) SIGRTMIN+9  44) SIGRTMIN+10 45) SIGRTMIN+11 46) SIGRTMIN+12 47) SIGRTMIN+13
+48) SIGRTMIN+14 49) SIGRTMIN+15 50) SIGRTMAX-14 51) SIGRTMAX-13 52) SIGRTMAX-12
+53) SIGRTMAX-11 54) SIGRTMAX-10 55) SIGRTMAX-9  56) SIGRTMAX-8  57) SIGRTMAX-7
+58) SIGRTMAX-6  59) SIGRTMAX-5  60) SIGRTMAX-4  61) SIGRTMAX-3  62) SIGRTMAX-2
+63) SIGRTMAX-1  64) SIGRTMAX
+
+Output 11: Child signal handling
+
+[PARENT] Creating child with its own signal handler
+[CHILD] Installed SIGTERM handler
+[PARENT] Sending SIGTERM to child after 3 seconds
+[CHILD] Received SIGTERM - Child handling signal
+[CHILD] Child exiting gracefully
+[PARENT] Child exited with status: 0
+
