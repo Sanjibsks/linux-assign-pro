@@ -1,0 +1,45 @@
+Command 1: nano signal_demo.c
+
+Explanation: I created the main C program that demonstrates signal handling between parent and child processes. The program sets up handlers for SIGTERM and SIGINT, creates two child processes that send these signals at different times.
+Command 2: nano Makefile
+
+Explanation: I created a Makefile to automate compilation and testing. This provides targets for building, debugging, cleaning, and running the signal demonstration program.
+Command 3: make or gcc compilation
+
+Explanation: I compiled the C program using either the Makefile or direct gcc. The compilation succeeded with appropriate flags for POSIX compliance and warning detection.
+Command 4: ./signal_demo
+
+Explanation: I ran the signal demonstration program. The parent process ran indefinitely until receiving SIGTERM from child 1 at 5 seconds, then handled SIGINT from child 2 at 10 seconds, demonstrating graceful signal handling.
+Command 5: Testing in background
+
+Explanation: I ran the program in the background and examined the process tree. This showed the parent-child relationships and confirmed that the parent was waiting for signals while children were scheduled to send them.
+Command 6: Manual signal testing
+
+Explanation: I manually sent SIGTERM to the running program using kill. The program's signal handler was activated, showing the formatted output and demonstrating that external processes can send signals.
+Command 7: Advanced signal features
+
+Explanation: I created and ran a program demonstrating additional signals (SIGUSR1, SIGUSR2). This showed how user-defined signals can be used for custom inter-process communication.
+Command 8: Signal blocking test
+
+Explanation: I created a program that blocks SIGINT temporarily. Pressing Ctrl+C during the blocking period showed that signals can be queued and delivered later when unblocked.
+Command 9: Monitoring with strace
+
+Explanation: I used strace to trace system calls during signal handling. This revealed the kill() system calls from children and the signal delivery to the parent with metadata including sender PID.
+Command 10: Error handling demo
+
+Explanation: I created a program to test error conditions in signal handling. This demonstrated proper error checking for invalid signal numbers and non-existent processes.
+Command 11: Concurrent signals test
+
+Explanation: I tested rapid signal delivery to see how the system handles multiple signals in quick succession. This showed that signals can be delivered while a handler is still executing.
+Command 12: Creating test script
+
+Explanation: I created an automated test script that runs all signal handling demonstrations. This ensures comprehensive testing of different signal scenarios and error conditions.
+Command 13: Signal handling in children
+
+Explanation: I created a program where child processes have their own signal handlers. This demonstrated that signals can be handled at different levels in a process hierarchy.
+Command 14: Different signal sending methods
+
+Explanation: I demonstrated various ways to send signals using kill with signal names, numbers, and pkill. This showed the flexibility of signal delivery mechanisms in Linux.
+Command 15: Checking signal dispositions
+
+Explanation: I examined the default signal handling in the shell using trap -l and kill -l. This provided insight into standard signal numbers and their typical purposes.
