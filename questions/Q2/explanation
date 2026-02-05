@@ -1,0 +1,42 @@
+Command 1: nano log_analyzer.sh
+
+Explanation: I opened nano editor to create the main script. The script is structured with functions for validation, analysis, and reporting to follow good programming practices and make the code modular.
+Command 2: chmod +x log_analyzer.sh
+
+Explanation: I added execute permissions to the script. This is essential because Linux requires scripts to have explicit execute permissions before they can be run directly from the command line.
+Command 3: Creating sample.log with heredoc
+
+Explanation: I used a here-document (<< 'EOF') to create a sample log file with 10 entries. This method allows creating multi-line files easily and preserves the exact formatting without needing to escape characters.
+Command 4: Creating empty.log
+
+Explanation: I created an empty log file to test edge cases. This tests how the script handles files with zero entries, ensuring it doesn't crash and provides meaningful output for empty files.
+Command 5: Testing with no argument
+
+Explanation: I tested the script without any arguments. The script correctly validated the argument count and displayed the appropriate error message with usage instructions, demonstrating proper input validation.
+Command 6: Testing with non-existent file
+
+Explanation: I tested with a file that doesn't exist. The script used the -e test operator to check file existence before attempting to read it, preventing file access errors and providing a clear error message.
+Command 7: Testing with unreadable file
+
+Explanation: I created a file without read permissions to test access control handling. The script checked readability with -r and provided a specific error message, showing comprehensive validation.
+Command 8: Testing with valid log file
+
+Explanation: I ran the script with the sample log file. The script successfully analyzed the file, displayed statistics in a formatted report, extracted the most recent ERROR message, and saved a report file.
+Command 9: Testing with empty log file
+
+Explanation: I tested with an empty file to ensure the script handles zero entries gracefully. The script correctly showed all counts as zero and displayed "N/A" for the most recent ERROR message.
+Command 10: Creating and testing malformed.log
+
+Explanation: I created a log file with invalid entries to test robustness. The script still processed valid lines while ignoring malformed ones, demonstrating graceful handling of imperfect data.
+Command 11: Creating and testing no_errors.log
+
+Explanation: I tested a log file containing no ERROR messages. The script correctly handled this case by showing zero ERROR count and providing an appropriate "N/A" message instead of trying to extract a non-existent ERROR.
+Command 12: Manual verification of counts
+
+Explanation: I manually verified the script's counts using wc and grep commands. This confirmed that the script's calculations were accurate and matched standard Linux command outputs.
+Command 13: Checking generated report files
+
+Explanation: I listed and examined the generated report files. Each run created a timestamped report file with consistent naming convention, and the content matched what was displayed on screen.
+Command 14: Testing with multiple files
+
+Explanation: I tested the script with multiple arguments to ensure it rejects incorrect usage. The script validated argument count and provided clear guidance on proper usage.
