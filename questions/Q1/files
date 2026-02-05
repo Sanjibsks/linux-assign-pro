@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# Check argument count
+if [ $# -ne 1 ]; then
+    echo "Error: Please provide exactly one argument."
+    echo "Usage: $0 <file_or_directory>"
+    exit 1
+fi
+
+# Check if path exists
+if [ ! -e "$1" ]; then
+    echo "Error: The path '$1' does not exist."
+    exit 1
+fi
+
+# Check if it's a regular file
+if [ -f "$1" ]; then
+    echo "Analyzing file: $1"
+    lines=$(wc -l < "$1")
+    words=$(wc -w < "$1")
+    chars=$(wc -m < "$1")
+    echo "Lines: $lines"
+    echo "Words: $words"
+    echo "Characters: $chars"
+
+# Check if it's a directory
+elif [ -d "$1" ]; then
+    echo "Analyzing directory: $1"
+    total_files=$(find "$1" -maxdepth 1 -type f | wc -l)
+    txt_files=$(find "$1" -maxdepth 1 -type f -name "*.txt" | wc -l)
+    echo "Total files: $total_files"
+    echo "Text files (.txt): $txt_files"
+
+# Handle other types (symbolic links, devices, etc.)
+else
+    echo "Error: '$1' is neither a regular file nor a directory."
+    exit 1
+fi
+
+exit 0
+
+2. sample.txt (Test file)
+
+Line 1
+Line 2
+Line 3
+
+3. test.txt (Test file)
+
+Hello World
+
+4. testdir/ (Test directory containing)
+
+    sample.txt (copied)
+
+    test.txt (copied)
+
+    image.jpg (empty file)
+
+    data.csv (empty file)
+
+5. link.txt (Symbolic link to sample.txt)
+6. testdir2/ (Additional test directory with nested structure)
+
+    file1.txt
+
+    file2.doc
+
+    subdir/ (empty directory)
+
