@@ -1,0 +1,193 @@
+Output 1: Running the script
+
+Processing emails.txt...
+Extracting valid email addresses...
+Removing duplicates from valid emails...
+Extracting invalid email addresses...
+Done!
+Valid email addresses saved to: valid.txt
+Invalid email addresses saved to: invalid.txt
+Summary:
+Total emails processed: 21
+Valid emails found: 6
+Invalid emails found: 15
+
+Output 2: Examining output files
+
+=== valid.txt ===
+123@test.com
+alice123@company.com
+jane.doe123@company.com
+john.doe@example.com
+test@123.com
+valid@email.com
+
+=== invalid.txt ===
+@nodomain.com
+another@valid.com
+bob-smith@test.com
+contact@support.com
+invalid-email
+john.doe@example.com
+nodomain@.com
+notanemail.com
+test@com
+test@company.net
+user@123.com
+user@company.co.uk
+user@domain.org
+user@sub.domain.com
+user.name@company.com
+
+=== Original count vs cleaned count ===
+ 21 emails.txt
+  6 valid.txt
+ 15 invalid.txt
+ 42 total
+
+Output 3: Testing with empty file
+
+Processing emails.txt...
+Extracting valid email addresses...
+Removing duplicates from valid emails...
+Extracting invalid email addresses...
+Done!
+Valid email addresses saved to: valid.txt
+Invalid email addresses saved to: invalid.txt
+Summary:
+Total emails processed: 0
+Valid emails found: 0
+Invalid emails found: 0
+
+(valid.txt and invalid.txt are empty)
+Output 4: Testing with all valid emails
+
+Processing emails.txt...
+Extracting valid email addresses...
+Removing duplicates from valid emails...
+Extracting invalid email addresses...
+Done!
+Valid email addresses saved to: valid.txt
+Invalid email addresses saved to: invalid.txt
+Summary:
+Total emails processed: 4
+Valid emails found: 4
+Invalid emails found: 0
+
+
+=== valid.txt ===
+user1@test.com
+user2@test.com
+user3@test.com
+user4@test.com
+
+Output 5: Testing with all invalid emails
+
+Processing emails.txt...
+Extracting valid email addresses...
+Removing duplicates from valid emails...
+Extracting invalid email addresses...
+Done!
+Valid email addresses saved to: valid.txt
+Invalid email addresses saved to: invalid.txt
+Summary:
+Total emails processed: 4
+Valid emails found: 0
+Invalid emails found: 4
+
+
+=== invalid.txt ===
+@test.com
+invalid
+test@.com
+test@com
+
+Output 6: Testing with mixed case emails
+
+Processing emails.txt...
+Extracting valid email addresses...
+Removing duplicates from valid emails...
+Extracting invalid email addresses...
+Done!
+Valid email addresses saved to: valid.txt
+Invalid email addresses saved to: invalid.txt
+Summary:
+Total emails processed: 4
+Valid emails found: 2
+Invalid emails found: 2
+
+
+
+=== valid.txt ===
+User@Test.com
+user@test.com
+
+=== invalid.txt ===
+USER@TEST.COM
+User.Name@Company.Com
+
+Output 7: Testing with special characters
+
+Processing emails.txt...
+Extracting valid email addresses...
+Removing duplicates from valid emails...
+Extracting invalid email addresses...
+Done!
+Valid email addresses saved to: valid.txt
+Invalid email addresses saved to: invalid.txt
+Summary:
+Total emails processed: 6
+Valid emails found: 0
+Invalid emails found: 6
+
+(All special character emails rejected due to strict pattern)
+Output 8: Manual verification
+
+Manual verification of regex pattern:
+Valid pattern: ^[a-zA-Z0-9]+@[a-zA-Z]+\.com$
+
+Testing pattern on original emails.txt:
+Manual valid count: 6
+Manual invalid count: 15
+
+Output 9: Duplicate removal test
+
+Processing emails.txt...
+Extracting valid email addresses...
+Removing duplicates from valid emails...
+Extracting invalid email addresses...
+Done!
+Valid email addresses saved to: valid.txt
+Invalid email addresses saved to: invalid.txt
+Summary:
+Total emails processed: 6
+Valid emails found: 3
+Invalid emails found: 3
+
+
+
+Original duplicates file:
+test@test.com
+test@test.com
+test@test.com
+user@user.com
+user@user.com
+another@another.com
+
+After deduplication in valid.txt:
+another@another.com
+test@test.com
+user@user.com
+
+Output 10: File listing
+
+-rw-r--r-- 1 user user  154 Feb  5 15:45 all_invalid.txt
+-rw-r--r-- 1 user user   45 Feb  5 15:45 all_valid.txt
+-rw-r--r-- 1 user user  479 Feb  5 15:44 emailcleaner.sh
+-rw-r--r-- 1 user user  433 Feb  5 15:44 emails.txt
+-rw-r--r-- 1 user user    1 Feb  5 15:45 empty.txt
+-rw-r--r-- 1 user user   93 Feb  5 15:46 invalid.txt
+-rw-r--r-- 1 user user  119 Feb  5 15:45 mixed_case.txt
+-rw-r--r-- 1 user user  433 Feb  5 15:47 original_emails.txt
+-rw-r--r-- 1 user user  128 Feb  5 15:45 special_chars.txt
+-rw-r--r-- 1 user user   36 Feb  5 15:46 valid.txt
